@@ -315,15 +315,17 @@ class VRCCalendarIcal
 
 		$extendedEvents = array();
 
-		if ($rangeStart !== false) {
-			$rangeStart = new DateTime();
-		}
+               if ($rangeStart === false) {
+                       $rangeStart = new DateTime();
+               } else {
+                       $rangeStart = new DateTime($rangeStart);
+               }
 
-		if ($rangeEnd !== false or $rangeEnd <= 0) {
-			$rangeEnd = new DateTime('2038/01/18');
-		} else {
-			$rangeEnd = new DateTime($rangeEnd);
-		}
+               if ($rangeEnd === false || $rangeEnd <= 0) {
+                       $rangeEnd = new DateTime('2038/01/18');
+               } else {
+                       $rangeEnd = new DateTime($rangeEnd);
+               }
 
 		$rangeStart = $rangeStart->format('U');
 		$rangeEnd   = $rangeEnd->format('U');
