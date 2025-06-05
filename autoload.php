@@ -25,6 +25,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'defines.php';
 $request_debug  = (isset($_GET['debug']) && $_GET['debug'] === 'on') ||
                   (isset($_GET['error_reporting']) && (int) $_GET['error_reporting'] === -1);
 $authorized_user = function_exists('current_user_can') &&
+                  function_exists('is_user_logged_in') &&
                   is_user_logged_in() && current_user_can('manage_options');
 
 if (VIKRENTCAR_DEBUG || ($request_debug && $authorized_user))
