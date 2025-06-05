@@ -123,14 +123,20 @@ abstract class JModel extends JObject
 		 *
 		 * @since 10.1.24
 		 */
-		if (preg_match("/model/i", $type)
-			|| (is_dir(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $type) && !is_dir(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . strtolower($prefix))))
-		{
-			// swap name with prefix
-			$tmp    = $type;
-			$type   = $prefix;
-			$prefix = $tmp;
-		}
+               $typeConst = strtoupper($type) . '_BASE';
+
+               // Support plugins installed under directories that don't match
+               // their component prefix by also checking for a *_BASE constant
+               // that defines the base path of the component.
+               if (preg_match("/model/i", $type)
+                       || ((is_dir(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $type) || defined($typeConst))
+                               && !is_dir(WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . strtolower($prefix))))
+               {
+                       // swap name with prefix
+                       $tmp    = $type;
+                       $type   = $prefix;
+                       $prefix = $tmp;
+               }
 
 		// remove 'model' from prefix (if any) and make it lowercase
 		$prefix = strtolower(preg_replace("/model/i", '', $prefix));
