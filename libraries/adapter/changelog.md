@@ -7,6 +7,7 @@
 ##### BUG FIXES
 
 * The site widgets now always use an incremental identifier, since WordPress is no longer able to provide a unique number when publishing them as Gutenberg blocks.
+* Added fallback capability check in `JUser::authorise()` when role permissions miss.
 
 ---
 
