@@ -21,7 +21,7 @@ class VRCCalendarIcal
 	public $todo_count = 0;
 	public $event_count = 0;
 	public $cal = [];
-	private $_lastKeyWord;
+	private $last_keyword;
 
 	private $site_tz_id;
 
