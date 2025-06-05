@@ -62,7 +62,8 @@ add_filter('auto_update_plugin', array('VikRentCarInstaller', 'useAutoUpdate'), 
  *
  * @since  1.2.0
  */
-add_action('in_plugin_update_message-vikrentcar/vikrentcar.php', array('VikRentCarInstaller', 'getUpdateMessage'), 10, 2);
+$plugin_slug = plugin_basename(__FILE__);
+add_action('in_plugin_update_message-' . $plugin_slug, array('VikRentCarInstaller', 'getUpdateMessage'), 10, 2);
 
 // init pagination layout
 VikRentCarBuilder::setupPaginationLayout();
