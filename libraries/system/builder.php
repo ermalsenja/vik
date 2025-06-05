@@ -245,10 +245,14 @@ class VikRentCarBuilder
 					$classname = 'VikRentCarOfflineCreditCardPayment';
 					break;
 
-				case 'bank_transfer':
-					$classname = 'VikRentCarBankTransferPayment';
-					break;
-			}
+                               case 'bank_transfer':
+                                       $classname = 'VikRentCarBankTransferPayment';
+                                       break;
+
+                               case 'stripe_payment':
+                                       $classname = 'VikRentCarStripePayment';
+                                       break;
+                       }
 
 			if ($classname)
 			{
