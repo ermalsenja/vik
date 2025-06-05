@@ -15,13 +15,26 @@ defined('ABSPATH') or die('No script kiddies please!');
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'defines.php';
 
 /**
- * It is possible to inject debug=on or error_reporting=-1 in
- * query string to force the error reporting to MAXIMUM.
+ * Determine whether debug mode should be enabled.
+ *
+ * The previous implementation allowed anyone to enable debug mode via
+ * query-string parameters. This would expose error details publicly, so
+ * now the debug mode can be triggered only through the constant
+ * {@see VIKRENTCAR_DEBUG} or by an authenticated administrator.
  */
-if (VIKRENTCAR_DEBUG || (isset($_GET['debug']) && $_GET['debug'] == 'on') || (isset($_GET['error_reporting']) && (int)$_GET['error_reporting'] === -1))
+$request_debug  = (isset($_GET['debug']) && $_GET['debug'] === 'on') ||
+                  (isset($_GET['error_reporting']) && (int) $_GET['error_reporting'] === -1);
+$authorized_user = function_exists('current_user_can') &&
+                  is_user_logged_in() && current_user_can('manage_options');
+
+if (VIKRENTCAR_DEBUG || ($request_debug && $authorized_user))
 {
-	error_reporting(E_ALL);
-	ini_set('display_errors', true);
+        error_reporting(E_ALL);
+        ini_set('display_errors', true);
+}
+else
+{
+        ini_set('display_errors', false);
 }
 
 // include internal loader if not exists
