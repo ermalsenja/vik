@@ -301,7 +301,12 @@ class JUser extends JObject
 				return true;
 			}
 		}
-
+		// Fallback capability check in case none of the roles matched.
+		if ($this->has_cap($cap))
+		{
+			return true;
+		}
+		
 		return false;
 	}
 
