@@ -256,7 +256,7 @@ add_shortcode('vikrentcar', function($atts, $content = null)
 add_action('vikrentcar_before_dispatch', function()
 {
 	$app 	= JFactory::getApplication();
-	$user 	= Jfactory::getUser();
+	$user 	= JFactory::getUser();
 
 	// initialize timezone handler
 	JDate::getDefaultTimezone();
