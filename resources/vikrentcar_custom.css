@@ -1,9 +1,0 @@
-/* This CSS file will be loaded at last. Any CSS customization should be placed here */
-/* Revise the section on suggesting similar future dates based on the search if there are no other campers available. */
-
-.vrctdbusy.vrctdbusyforcheckin:after, .vrctdbusy.vrctdbusycheckout:after {
-    display: none;
-}
-.vrctdbusy.vrctdbusyforcheckin, .vrctdbusy.vrctdbusycheckout {
-    background: var(--vrc-red-color);
-}
