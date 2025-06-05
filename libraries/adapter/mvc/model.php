@@ -150,21 +150,30 @@ abstract class JModel extends JObject
 			 *
 			 * @since 10.1.24
 			 */
-			$paths = array_merge(
-				// default include path
-				array(
-					/**
-					 * Search also inside the libraries folder of the current plugin.
-					 * Prioritize this folder to avoid conflicts with deprecated files.
-					 *
-					 * @since 10.1.35
-					 */
-					implode(DIRECTORY_SEPARATOR, array(WP_PLUGIN_DIR, $prefix, 'libraries', 'mvc', $config['client'], 'models')),
-					implode(DIRECTORY_SEPARATOR, array(WP_PLUGIN_DIR, $prefix, $config['client'], 'models')),
-				),
-				// specified include paths
-				self::addIncludePath()
-			);
+                        $base = WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $prefix;
+
+                        // check if there is a constant defining the base path for the component
+                        $const = strtoupper($prefix) . '_BASE';
+                        if (defined($const))
+                        {
+                                $base = constant($const);
+                        }
+
+                        $paths = array_merge(
+                                // default include path
+                                array(
+                                        /**
+                                         * Search also inside the libraries folder of the current plugin.
+                                         * Prioritize this folder to avoid conflicts with deprecated files.
+                                         *
+                                         * @since 10.1.35
+                                         */
+                                        implode(DIRECTORY_SEPARATOR, array($base, 'libraries', 'mvc', $config['client'], 'models')),
+                                        implode(DIRECTORY_SEPARATOR, array($base, $config['client'], 'models')),
+                                ),
+                                // specified include paths
+                                self::addIncludePath()
+                        );
 
 			/**
 			 * Iterate paths until we find an existing file (or till the list is empty).
