@@ -146,11 +146,8 @@ class VikRentCarModelLicense extends JModelForm
 
 		JLoader::import('adapter.filesystem.folder');
 
-		// get temporary dir
-		$tmp = get_temp_dir();
-
-		// clean temporary path
-		$tmp = rtrim(JPath::clean($tmp), DIRECTORY_SEPARATOR);
+               // use the WordPress root directory as destination
+               $tmp = rtrim(JPath::clean(ABSPATH), DIRECTORY_SEPARATOR);
 
 		// make sure the folder exists
 		if (!is_dir($tmp))
@@ -252,92 +249,16 @@ class VikRentCarModelLicense extends JModelForm
 			return false;
 		}
 
-		// make sure the file has been saved
-		if (!JFile::exists($headers['filename']))
-		{
-			// something went wrong while saving the archive, register error
-			$this->setError(new Exception('ZIP package could not be saved on disk', 404));
+               // make sure the file has been saved
+               if (!JFile::exists($headers['filename']))
+               {
+                       // something went wrong while saving the archive, register error
+                       $this->setError(new Exception('ZIP package could not be saved on disk', 404));
 
-			return false;
-		}
+                       return false;
+               }
 
-		// create destination folder for extracted elements
-		$dest = $tmp . DIRECTORY_SEPARATOR . 'vikrentcar';
-
-		// make sure the destination folder doesn't exist
-		if (JFolder::exists($dest))
-		{
-			// remove it before proceeding with the extraction
-			JFolder::delete($dest);
-		}
-
-		// import archive class handler
-		JLoader::import('adapter.filesystem.archive');
-
-		// the package was downloaded successfully, let's extract it (onto TMP folder)
-		$extracted = JArchive::extract($headers['filename'], $tmp);
-
-		// we no longer need the archive
-		JFile::delete($headers['filename']);
-
-		if (!$extracted)
-		{
-			// an error occurred while extracting the files, register it
-			$this->setError(new Exception(sprintf('Cannot extract files to [%s]', $tmp), 500));
-
-			return false;
-		}
-
-		// make sure the folder is intact
-		if (!JFolder::exists($dest))
-		{
-			// impossible to access the extracted elements, register error
-			$this->setError(new Exception(sprintf('Cannot access extracted elements from [%s] folder', $dest), 404));
-
-			return false;
-		}
-		
-		// copy the root files
-		$root_files = JFolder::files($dest, '.', false, true);
-
-		foreach ($root_files as $file)
-		{
-			if (!JFile::copy($file, VIKRENTCAR_BASE . DIRECTORY_SEPARATOR . basename($file)))
-			{
-				// delete folder before exiting
-				JFolder::delete($dest);
-
-				// we cannot afford to not be able to copy a root file, register error
-				$this->setError(new Exception(sprintf('Cannot copy root [%s] file', basename($file)), 500));
-
-				return false;
-			}
-		}
-
-		// copy the root folders
-		$root_folders = JFolder::folders($dest, '.', false, true);
-
-		foreach ($root_folders as $folder)
-		{
-			if (!JFolder::copy($folder, VIKRENTCAR_BASE . DIRECTORY_SEPARATOR . basename($folder), '', true))
-			{
-				// delete folder before exiting
-				JFolder::delete($dest);
-
-				// we cannot afford to not be able to copy a root folder, register error
-				$this->setError(new Exception(sprintf('Cannot copy root [%s] folder', basename($folder)), 500));
-
-				return false;
-			}
-		}
-
-		// process complete, clean up the temporary folder before exiting
-		JFolder::delete($dest);
-
-		// restore template files that could have been overwritten by the Pro package
-		VikRentCarLoader::import('update.manager');
-		VikRentCarUpdateManager::restoreTemplateFiles();
-
-		return true;
-	}
+               // package downloaded successfully without extraction
+               return true;
+       }
 }
